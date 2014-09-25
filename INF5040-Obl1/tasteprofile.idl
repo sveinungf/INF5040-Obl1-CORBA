@@ -1,6 +1,7 @@
 /* This module defines the server interface for the Musical Taste Profile Service. */
 module TasteProfile
 {
+	//
 	/* The service interface with the methods that can be invoked remotely by clients */
   	interface Profiler
   	{
