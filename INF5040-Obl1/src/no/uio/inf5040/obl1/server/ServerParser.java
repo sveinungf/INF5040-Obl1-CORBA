@@ -32,7 +32,7 @@ class ServerParser {
 		String[] parts = null;
 
 		while (scan.hasNextLine()) {
-			parts = scan.nextLine().split(" ");
+			parts = scan.nextLine().split("\\s+");
 
 			if (songId.compareTo(parts[1]) == 0) {
 				timesPlayed += Integer.parseInt(parts[2]);
@@ -47,7 +47,7 @@ class ServerParser {
 		String[] parts;
 
 		while (scan.hasNextLine()) {
-			parts = scan.nextLine().split(" ");
+			parts = scan.nextLine().split("\\s+");
 
 			if ((userId.compareTo(parts[0]) == 0)
 					&& (songId.compareTo(parts[1]) == 0))
@@ -64,7 +64,7 @@ class ServerParser {
 		ArrayList<Song> userSongs = new ArrayList<Song>();
 
 		while (scan.hasNextLine()) {
-			parts = scan.nextLine().split(" ");
+			parts = scan.nextLine().split("\\s+");
 
 			if ((userId.compareTo(parts[0]) == 0)
 					&& (songId.compareTo(parts[1]) == 0))
