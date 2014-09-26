@@ -1,6 +1,5 @@
 package no.uio.inf5040.obl1.server;
 
-
 import java.util.*;
 import java.io.*;
 
@@ -24,7 +23,70 @@ class ServerParser {
 	// implementasjon av caching gjenstår
 	void parseAndCache(HashMap<String, Integer> songCache,
 			HashMap<String, User> userCache) {
+		int userTimesPlayed = 0;
+		int totalPlayCount, playCount;
+		String[] parts = null;
+		String userId = null;
+		ArrayList<Song> userSongs = null;
 
+		PriorityList pl = new PriorityList();
+
+		while (scan.hasNextLine()) {
+
+			parts = scan.nextLine().split("\\s+");
+			// parts[0] = userId, parts[1] = songId, parts[2] = playCount
+
+			if (userId == null) {
+				userId = parts[0];
+				userSongs = new ArrayList<Song>();
+			}
+
+			playCount = Integer.parseInt(parts[2]);
+
+			/* caching of songs */
+			if (songCache.containsKey(parts[1])) {
+				// song already exists in cache, update play count
+				totalPlayCount = songCache.get(parts[1]).intValue() + playCount;
+				songCache.put(parts[1], totalPlayCount);
+			}
+
+			else {
+				// new song - cache
+				songCache.put(parts[1], playCount);
+			}
+
+			/* caching of users */
+			if (userId.compareTo(parts[0]) != 0) {
+				// new userId - cache or throw away old user data
+
+				if (userCache.size() < 1000) {
+					// sufficient space - cache data of old user
+					userCache.put(userId, new UserImpl(userId,
+							(Song[]) userSongs.toArray()));
+					pl.add(userId, userTimesPlayed);
+				}
+
+				else if (userTimesPlayed > pl.getLowest()) {
+					// more active user - cache and remove least active user
+					String toRemove = pl.pop();
+					userCache.remove(toRemove);
+					userCache.put(userId, new UserImpl(userId,
+							(Song[]) userSongs.toArray()));
+					pl.add(userId, userTimesPlayed);
+				}
+
+				userId = parts[0];
+				userSongs = new ArrayList<Song>();
+				userTimesPlayed = playCount;
+			}
+
+			else {
+				// old userId - update users times played and add song to users
+				// list
+				userSongs.add(new SongImpl(userId, playCount));
+				userTimesPlayed += playCount;
+			}
+		}
 	}
 
 	int parseGetTimesPlayed(String songId) {
