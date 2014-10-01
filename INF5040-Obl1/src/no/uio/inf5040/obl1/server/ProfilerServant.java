@@ -28,7 +28,7 @@ public class ProfilerServant extends ProfilerPOA {
 			parser.parseAndCache(songCache, userCache);
 	}
 
-	@Override
+	
 	public int getTimesPlayed(String song_id) {
 
 		if (cacheEnabled && songCache.containsKey(song_id))
@@ -39,7 +39,7 @@ public class ProfilerServant extends ProfilerPOA {
 
 	}
 
-	@Override
+	
 	public int getTimesPlayedByUser(String user_id, String song_id) {
 		if (cacheEnabled && userCache.containsKey(user_id)) {
 			return getUserPlayCount(userCache.get(user_id), song_id);
@@ -50,7 +50,7 @@ public class ProfilerServant extends ProfilerPOA {
 			return parser.parseGetTimesPlayedByUser(user_id, song_id);
 	}
 
-	@Override
+	
 	public int getUserProfile(String user_id, String song_id, UserHolder user) {
 
 		if (cacheEnabled && userCache.containsKey(user_id))
