@@ -24,11 +24,8 @@ public class ProfilerServant extends ProfilerPOA {
 	}
 
 	private void init() {
-		if (cacheEnabled) {
-			// implementasjon gjenstår
+		if (cacheEnabled) 
 			parser.parseAndCache(songCache, userCache);
-		}
-
 	}
 
 	@Override

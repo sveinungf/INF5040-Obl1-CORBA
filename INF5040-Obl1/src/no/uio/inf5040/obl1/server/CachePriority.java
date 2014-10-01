@@ -1,10 +1,10 @@
 package no.uio.inf5040.obl1.server;
 
-public class PriorityList {
+public class CachePriority {
 	UserPlayCount first;
 	int lowest, numElements;
 
-	PriorityList() {
+	CachePriority() {
 		first = null;
 		lowest = 0;
 	}
@@ -44,6 +44,7 @@ public class PriorityList {
 		String toReturn = first.userId;
 		first = first.next;
 		first.prev = null;
+		lowest = first.playCount;
 
 		return toReturn;
 	}

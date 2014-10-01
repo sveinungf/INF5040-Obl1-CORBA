@@ -20,7 +20,7 @@ class ServerParser {
 		}
 	}
 
-	// implementasjon av caching gjenstår
+	
 	void parseAndCache(HashMap<String, Integer> songCache,
 			HashMap<String, User> userCache) {
 		int userTimesPlayed = 0;
@@ -29,7 +29,7 @@ class ServerParser {
 		String userId = null;
 		ArrayList<Song> userSongs = null;
 
-		PriorityList pl = new PriorityList();
+		CachePriority pl = new CachePriority();
 
 		while (scan.hasNextLine()) {
 
