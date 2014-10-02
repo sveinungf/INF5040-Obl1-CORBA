@@ -33,14 +33,14 @@ public class ProfilerServant extends ProfilerPOA {
 
 	
 	public int getTimesPlayed(String song_id) {
-		System.out.println("getTimesPlayed: id:" + song_id);
+		System.out.print("getTimesPlayed: id:" + song_id);
 		if (cacheEnabled && songCache.containsKey(song_id)) {
-			System.out.println("getTimesPlayed: Returning cached value");
+			System.out.println(" - Returning cached value");
 			return songCache.get(song_id);
 		}
 
 		else {
-			System.out.println("getTimesPlayed: Searching source file");
+			System.out.println(" - Searching source file");
 			return parser.parseGetTimesPlayed(song_id);
 		}
 
@@ -48,29 +48,29 @@ public class ProfilerServant extends ProfilerPOA {
 
 	
 	public int getTimesPlayedByUser(String user_id, String song_id) {
-		System.out.println("getTimesPlayedByUser: userId:" + user_id + "\tsongId:" + song_id);
+		System.out.print("getTimesPlayedByUser: userId:" + user_id + "\tsongId:" + song_id);
 		if (cacheEnabled && userCache.containsKey(user_id)) {
-			System.out.println("getTimesPlayedByUser: Returning cached value");
+			System.out.println(" - Returning cached value");
 			return getUserPlayCount(userCache.get(user_id), song_id);
 
 		}
 
 		else {
-			System.out.println("getTimesPlayedByUser: Searching source file");
+			System.out.println(" - Searching source file");
 			return parser.parseGetTimesPlayedByUser(user_id, song_id);
 		}
 	}
 
 	
 	public int getUserProfile(String user_id, String song_id, UserHolder user) {
-		System.out.println("getUserProfile: userId: " + user_id + " songId: " + song_id);
+		System.out.print("getUserProfile: userId: " + user_id + " songId: " + song_id);
 		if (cacheEnabled && userCache.containsKey(user_id)) {
-			System.out.println("getUserProfile: Searching source file");
+			System.out.println(" - Returning cached value");
 			return getUserPlayCount(userCache.get(user_id), song_id);
 		}
 
 		else {
-			System.out.println("getUserProfile: Returning cached value");
+			System.out.println(" - Searching source file");
 			return parser.parseGetUserProfile(user_id, song_id, user);
 		}
 	}
