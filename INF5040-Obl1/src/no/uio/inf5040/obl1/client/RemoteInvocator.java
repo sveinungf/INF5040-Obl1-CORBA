@@ -97,7 +97,7 @@ public class RemoteInvocator implements LineReadListener {
 		}
 		
 		sb.append(" (");
-		sb.append((after - before) / 1000);
+		sb.append((after - before) / 1000000);
 		sb.append(" ms)");
 
 		return sb.toString();
