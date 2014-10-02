@@ -155,7 +155,7 @@ class ServerParser {
 			lastUserId = parts[0];
 		}
 
-		user.value = new UserImpl(userId, (Song[]) userSongs.toArray());
+		user.value = new UserImpl(userId, userSongs.toArray(new Song[0]));
 
 		return timesPlayed;
 	}
