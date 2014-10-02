@@ -26,7 +26,7 @@ public class ProfilerServer {
 			rootpoa.the_POAManager().activate();
 
 			ProfilerServant profilerServant = new ProfilerServant(args[4],
-					Boolean.getBoolean(args[3]));
+					Boolean.getBoolean(args[5]));
 			org.omg.CORBA.Object ref = rootpoa
 					.servant_to_reference(profilerServant);
 			Profiler pref = ProfilerHelper.narrow(ref);
