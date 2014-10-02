@@ -32,7 +32,7 @@ class ServerParser {
 		int userTimesPlayed = 0;
 		int totalPlayCount, playCount;
 		String[] parts = null;
-		String userId = null;
+		String lastUserId = null;
 		ArrayList<Song> userSongs = null;
 
 		CachePriority pl = new CachePriority();
@@ -42,8 +42,8 @@ class ServerParser {
 			parts = scan.nextLine().split("\\s+");
 			// parts[0] = userId, parts[1] = songId, parts[2] = playCount
 
-			if (userId == null) {
-				userId = parts[0];
+			if (lastUserId == null) {
+				lastUserId = parts[0];
 				userSongs = new ArrayList<Song>();
 			}
 
@@ -62,26 +62,26 @@ class ServerParser {
 			}
 
 			/* caching of users */
-			if (userId.compareTo(parts[0]) != 0) {
+			if (lastUserId.compareTo(parts[0]) != 0) {
 				// new userId - cache or throw away old user data
 
 				if (userCache.size() < 1000) {
 					// sufficient space - cache data of old user
-					userCache.put(userId, new UserImpl(userId,
+					userCache.put(lastUserId, new UserImpl(lastUserId,
 							(Song[]) userSongs.toArray()));
-					pl.add(userId, userTimesPlayed);
+					pl.add(lastUserId, userTimesPlayed);
 				}
 
 				else if (userTimesPlayed > pl.getLowest()) {
 					// more active user - cache and remove least active user
 					String toRemove = pl.pop();
 					userCache.remove(toRemove);
-					userCache.put(userId, new UserImpl(userId,
+					userCache.put(lastUserId, new UserImpl(lastUserId,
 							(Song[]) userSongs.toArray()));
-					pl.add(userId, userTimesPlayed);
+					pl.add(lastUserId, userTimesPlayed);
 				}
 
-				userId = parts[0];
+				lastUserId = parts[0];
 				userSongs = new ArrayList<Song>();
 				userTimesPlayed = playCount;
 			}
@@ -89,7 +89,7 @@ class ServerParser {
 			else {
 				// old userId - update users times played and add song to users
 				// list
-				userSongs.add(new SongImpl(userId, playCount));
+				userSongs.add(new SongImpl(lastUserId, playCount));
 				userTimesPlayed += playCount;
 			}
 		}
@@ -114,20 +114,20 @@ class ServerParser {
 	int parseGetTimesPlayedByUser(String userId, String songId) {
 		initScanner();
 		int timesPlayed = 0;
-		String currentUserId = null;
+		String lastUserId = null;
 		String[] parts;
 
 		while (scan.hasNextLine()) {
 			parts = scan.nextLine().split("\\s+");
 			
-			if(currentUserId == userId && userId.compareTo(parts[0]) != 0)
+			if(lastUserId.compareTo(userId) == 0 && userId.compareTo(parts[0]) != 0)
 				break;
 			
-			currentUserId = parts[0];
-
 			if ((userId.compareTo(parts[0]) == 0)
 					&& (songId.compareTo(parts[1]) == 0)) 
 				timesPlayed += Integer.parseInt(parts[2]);
+			
+			lastUserId = parts[0];
 		}
 		
 		return timesPlayed;
@@ -136,18 +136,24 @@ class ServerParser {
 	int parseGetUserProfile(String userId, String songId, UserHolder user) {
 		initScanner();
 		int timesPlayed = 0;
+		String lastUserId = null;
 		String[] parts;
 
 		ArrayList<Song> userSongs = new ArrayList<Song>();
 
 		while (scan.hasNextLine()) {
 			parts = scan.nextLine().split("\\s+");
-
+			
+			if(lastUserId.compareTo(userId) == 0 && userId.compareTo(parts[0]) != 0)
+				break;
+				
 			if ((userId.compareTo(parts[0]) == 0)
-					&& (songId.compareTo(parts[1]) == 0))
+					&& (songId.compareTo(parts[1]) == 0)) {
 				timesPlayed += Integer.parseInt(parts[2]);
-
-			userSongs.add(new SongImpl(parts[1], Integer.parseInt(parts[2])));
+				userSongs.add(new SongImpl(parts[1], Integer.parseInt(parts[2])));
+			}
+			
+			lastUserId = parts[0];
 		}
 
 		user.value = new UserImpl(userId, (Song[]) userSongs.toArray());
