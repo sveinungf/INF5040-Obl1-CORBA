@@ -24,13 +24,15 @@ public class ProfilerServant extends ProfilerPOA {
 	}
 
 	private void init() {
-		if (cacheEnabled) 
+		if (cacheEnabled) {
+			System.out.print("Caching data...");
 			parser.parseAndCache(songCache, userCache);
+		}
 	}
 
 	
 	public int getTimesPlayed(String song_id) {
-
+		System.out.println("getTimesPlayed: id:" + song_id);
 		if (cacheEnabled && songCache.containsKey(song_id))
 			return songCache.get(song_id);
 
@@ -41,6 +43,7 @@ public class ProfilerServant extends ProfilerPOA {
 
 	
 	public int getTimesPlayedByUser(String user_id, String song_id) {
+		System.out.println("getTimesPlayedByUser: userId:" + user_id + "songId:" + song_id);
 		if (cacheEnabled && userCache.containsKey(user_id)) {
 			return getUserPlayCount(userCache.get(user_id), song_id);
 

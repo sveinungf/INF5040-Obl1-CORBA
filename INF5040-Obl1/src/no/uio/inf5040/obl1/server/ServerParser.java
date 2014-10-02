@@ -90,6 +90,7 @@ class ServerParser {
 	}
 
 	int parseGetTimesPlayed(String songId) {
+		scan.reset();
 		int timesPlayed = 0;
 		String[] parts = null;
 
@@ -105,6 +106,7 @@ class ServerParser {
 	}
 
 	int parseGetTimesPlayedByUser(String userId, String songId) {
+		scan.reset();
 		int timesPlayed = 0;
 		String[] parts;
 
@@ -120,6 +122,7 @@ class ServerParser {
 	}
 
 	int parseGetUserProfile(String userId, String songId, UserHolder user) {
+		scan.reset();
 		int timesPlayed = 0;
 		String[] parts;
 

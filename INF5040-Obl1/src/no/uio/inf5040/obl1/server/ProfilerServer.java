@@ -15,7 +15,7 @@ public class ProfilerServer {
 	public static void main(String[] args) {
 		if (args.length < 6) {
 			System.out
-					.println("Usage: java –jar .jar -ORBInitialPort <port> -ORBInitialHost <host>");
+					.println("Usage: java –jar .jar -ORBInitialPort <port> -ORBInitialHost <host> <file_name> <enable_cache");
 			System.exit(1);
 		}
 
