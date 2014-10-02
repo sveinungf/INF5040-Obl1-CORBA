@@ -22,8 +22,7 @@ public class ProfilerServant extends ProfilerPOA {
 		userCache = new HashMap<String, User>();
 		init();
 	}
-	
-	
+
 	private void init() {
 		if (cacheEnabled) {
 			System.out.print("Caching data...");
@@ -31,9 +30,9 @@ public class ProfilerServant extends ProfilerPOA {
 		}
 	}
 
-	
 	public int getTimesPlayed(String song_id) {
 		System.out.print("getTimesPlayed: id:" + song_id);
+
 		if (cacheEnabled && songCache.containsKey(song_id)) {
 			System.out.println(" - Returning cached value");
 			return songCache.get(song_id);
@@ -46,9 +45,10 @@ public class ProfilerServant extends ProfilerPOA {
 
 	}
 
-	
 	public int getTimesPlayedByUser(String user_id, String song_id) {
-		System.out.print("getTimesPlayedByUser: userId:" + user_id + "\tsongId:" + song_id);
+		System.out.print("getTimesPlayedByUser: userId:" + user_id
+				+ "\tsongId:" + song_id);
+
 		if (cacheEnabled && userCache.containsKey(user_id)) {
 			System.out.println(" - Returning cached value");
 			return getUserPlayCount(userCache.get(user_id), song_id);
@@ -61,12 +61,14 @@ public class ProfilerServant extends ProfilerPOA {
 		}
 	}
 
-	
 	public int getUserProfile(String user_id, String song_id, UserHolder user) {
-		System.out.print("getUserProfile: userId: " + user_id + " songId: " + song_id);
+		System.out.print("getUserProfile: userId: " + user_id + " songId: "
+				+ song_id);
+
 		if (cacheEnabled && userCache.containsKey(user_id)) {
 			System.out.println(" - Returning cached value");
-			return getUserPlayCount(userCache.get(user_id), song_id);
+			user.value = userCache.get(user_id);
+			return getUserPlayCount(user.value, song_id);
 		}
 
 		else {
