@@ -77,7 +77,7 @@ public class ProfilerServant extends ProfilerPOA {
 
 	int getUserPlayCount(User usr, String songId) {
 		for (Song s : usr.songs) {
-			if (s.id.compareTo(songId) == 0)
+			if (songId.equals(s.id))
 				return s.play_count;
 		}
 		return -1;

@@ -62,7 +62,7 @@ class ServerParser {
 			}
 
 			/* caching of users */
-			if (lastUserId.compareTo(parts[0]) != 0) {
+			if (lastUserId.equals(parts[0])) {
 				// new userId - cache or throw away old user data
 
 				if (userCache.size() < 1000) {
@@ -103,7 +103,7 @@ class ServerParser {
 		while (scan.hasNextLine()) {
 			parts = scan.nextLine().split("\\s+");
 
-			if (songId.compareTo(parts[1]) == 0) {
+			if (songId.equals(parts[1])) {
 				timesPlayed += Integer.parseInt(parts[2]);
 			}
 		}
@@ -120,11 +120,11 @@ class ServerParser {
 		while (scan.hasNextLine()) {
 			parts = scan.nextLine().split("\\s+");
 			
-			if(userId.equals(lastUserId) && userId.equals(parts[0]))
+			if(userId.equals(lastUserId) && !userId.equals(parts[0]))
 				break;
 			
-			if ((userId.compareTo(parts[0]) == 0)
-					&& (songId.compareTo(parts[1]) == 0)) 
+			if (userId.equals(parts[0])
+					&& songId.equals(parts[1])) 
 				timesPlayed += Integer.parseInt(parts[2]);
 			
 			lastUserId = parts[0];
@@ -144,11 +144,10 @@ class ServerParser {
 		while (scan.hasNextLine()) {
 			parts = scan.nextLine().split("\\s+");
 			
-			if(lastUserId.compareTo(userId) == 0 && userId.compareTo(parts[0]) != 0)
+			if(userId.equals(lastUserId) && userId.equals(parts[0]))
 				break;
 				
-			if ((userId.compareTo(parts[0]) == 0)
-					&& (songId.compareTo(parts[1]) == 0)) {
+			if (userId.equals(parts[0]) && songId.equals(parts[1])) {
 				timesPlayed += Integer.parseInt(parts[2]);
 				userSongs.add(new SongImpl(parts[1], Integer.parseInt(parts[2])));
 			}
