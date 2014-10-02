@@ -9,7 +9,27 @@ import org.omg.CosNaming.NamingContextExtHelper;
 
 public class ProfilerClient {
 
+	private static final String INPUT_ARG = "-in";
+
 	public static void main(String[] args) {
+		String inputfile = null;
+
+		for (int i = 0; i < args.length - 1 && inputfile == null; ++i) {
+			if (INPUT_ARG.equals(args[i])) {
+				inputfile = args[i + 1];
+			}
+		}
+
+		if (inputfile == null) {
+			System.out.println("Error: Must supply input file.");
+			System.out.println("Usage: this -ORBInitialPort <port>"
+					+ " -ORBInitialHost <host> " + INPUT_ARG
+					+ " <path to input file>");
+			return;
+		}
+
+		System.out.println("Starting client...");
+
 		ORB orb = ORB.init(args, null);
 
 		try {
@@ -24,7 +44,7 @@ public class ProfilerClient {
 			RemoteInvocator invocator = new RemoteInvocator(profiler,
 					cacheUsers);
 
-			FileHandler infile = new FileHandler("input.txt");
+			FileHandler infile = new FileHandler(inputfile);
 			FileHandler outfile = new FileHandler("output.txt");
 
 			infile.readTo(invocator);
