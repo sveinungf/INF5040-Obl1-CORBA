@@ -34,14 +34,16 @@ public class RemoteInvocator implements LineReadListener {
 		String arg1 = fields[1];
 		String arg2 = fields.length > 2 ? fields[2] : null;
 
+		System.out.println("Sent: " + fields);
 		String output = getOutput(method, arg1, arg2);
 		results.add(output);
-		System.out.println(output);
+		System.out.println("Received: " + output);
 	}
 
 	private String getOutput(String method, String arg1, String arg2) {
 		String userId, songId;
 		StringBuilder sb = new StringBuilder();
+		boolean fromCache = false;
 		int timesPlayed = 0;
 		long before = System.nanoTime();
 		long after = 0L;
@@ -73,6 +75,8 @@ public class RemoteInvocator implements LineReadListener {
 
 					cache.put(userId, userHolder.value);
 				} else {
+					fromCache = true;
+					
 					for (Song song : user.songs) {
 						if (song.id.equals(songId)) {
 							timesPlayed = song.play_count;
@@ -98,7 +102,13 @@ public class RemoteInvocator implements LineReadListener {
 		
 		sb.append(" (");
 		sb.append((after - before) / 1000000);
-		sb.append(" ms)");
+		sb.append(" ms");
+		
+		if (fromCache) {
+			sb.append(", from cache");
+		}
+		
+		sb.append(")");
 
 		return sb.toString();
 	}

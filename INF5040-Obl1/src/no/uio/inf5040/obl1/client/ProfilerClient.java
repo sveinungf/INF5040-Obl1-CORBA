@@ -43,8 +43,6 @@ public class ProfilerClient {
 			return;
 		}
 
-		System.out.println("Starting client...");
-
 		ORB orb = ORB.init(args, null);
 
 		try {
