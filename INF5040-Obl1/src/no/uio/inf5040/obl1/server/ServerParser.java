@@ -120,7 +120,7 @@ class ServerParser {
 		while (scan.hasNextLine()) {
 			parts = scan.nextLine().split("\\s+");
 			
-			if(userId.compareTo(lastUserId) == 0 && userId.compareTo(parts[0]) != 0)
+			if(userId.equals(lastUserId) && userId.equals(parts[0]))
 				break;
 			
 			if ((userId.compareTo(parts[0]) == 0)
