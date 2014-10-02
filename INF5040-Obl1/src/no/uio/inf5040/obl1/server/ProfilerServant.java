@@ -22,7 +22,8 @@ public class ProfilerServant extends ProfilerPOA {
 		userCache = new HashMap<String, User>();
 		init();
 	}
-
+	
+	
 	private void init() {
 		if (cacheEnabled) {
 			System.out.print("Caching data...");
@@ -33,11 +34,15 @@ public class ProfilerServant extends ProfilerPOA {
 	
 	public int getTimesPlayed(String song_id) {
 		System.out.println("getTimesPlayed: id:" + song_id);
-		if (cacheEnabled && songCache.containsKey(song_id))
+		if (cacheEnabled && songCache.containsKey(song_id)) {
+			System.out.println("Returning cached value");
 			return songCache.get(song_id);
+		}
 
-		else
+		else {
+			System.out.println("Searching source file");
 			return parser.parseGetTimesPlayed(song_id);
+		}
 
 	}
 

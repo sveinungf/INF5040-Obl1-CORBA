@@ -10,9 +10,15 @@ import no.uio.inf5040.obl1.tasteprofile.User;
 import no.uio.inf5040.obl1.tasteprofile.UserHolder;
 
 class ServerParser {
+	private String fileName;
 	Scanner scan;
 
 	ServerParser(String fileName) {
+		this.fileName = fileName;
+		initScanner();
+	}
+
+	private void initScanner() {
 		try {
 			scan = new Scanner(new File(fileName));
 		} catch (FileNotFoundException e) {
@@ -20,9 +26,9 @@ class ServerParser {
 		}
 	}
 
-	
 	void parseAndCache(HashMap<String, Integer> songCache,
 			HashMap<String, User> userCache) {
+
 		int userTimesPlayed = 0;
 		int totalPlayCount, playCount;
 		String[] parts = null;
@@ -90,7 +96,7 @@ class ServerParser {
 	}
 
 	int parseGetTimesPlayed(String songId) {
-		scan.reset();
+		initScanner();
 		int timesPlayed = 0;
 		String[] parts = null;
 
@@ -106,23 +112,29 @@ class ServerParser {
 	}
 
 	int parseGetTimesPlayedByUser(String userId, String songId) {
-		scan.reset();
+		initScanner();
 		int timesPlayed = 0;
+		String currentUserId = null;
 		String[] parts;
 
 		while (scan.hasNextLine()) {
 			parts = scan.nextLine().split("\\s+");
+			
+			if(currentUserId == userId && userId.compareTo(parts[0]) != 0)
+				break;
+			
+			currentUserId = parts[0];
 
 			if ((userId.compareTo(parts[0]) == 0)
-					&& (songId.compareTo(parts[1]) == 0))
+					&& (songId.compareTo(parts[1]) == 0)) 
 				timesPlayed += Integer.parseInt(parts[2]);
 		}
-
+		
 		return timesPlayed;
 	}
 
 	int parseGetUserProfile(String userId, String songId, UserHolder user) {
-		scan.reset();
+		initScanner();
 		int timesPlayed = 0;
 		String[] parts;
 
