@@ -14,7 +14,7 @@ public class CachePriority {
 		int playCount;
 
 		UserPlayCount next, prev;
-			
+
 		UserPlayCount(String userId, int playCount) {
 			this.userId = userId;
 			this.playCount = playCount;
@@ -31,16 +31,23 @@ public class CachePriority {
 			UserPlayCount temp = first;
 
 			while (in.playCount > temp.playCount) {
-					if(temp.next == null)
-						break;
+				if (temp.next == null)
+					break;
 				temp = temp.next;
 			}
 
-			in.next = temp;
-			in.prev = temp.prev;
-			if(temp.prev != null)
-				temp.prev.next = in;
-			temp.prev = in;
+			if (temp.next == null) {
+				temp.next = in;
+				in.prev = temp;
+			}
+
+			else {
+				in.next = temp;
+				in.prev = temp.prev;
+				if (temp.prev != null)
+					temp.prev.next = in;
+				temp.prev = in;
+			}
 		}
 
 		lowest = first.playCount;
@@ -49,8 +56,12 @@ public class CachePriority {
 	String pop() {
 		String toReturn = first.userId;
 		first = first.next;
-		first.prev = null;
-		lowest = first.playCount;
+
+		if (first != null) {
+			first.prev = null;
+			lowest = first.playCount;
+		} else
+			lowest = 0;
 
 		return toReturn;
 	}
