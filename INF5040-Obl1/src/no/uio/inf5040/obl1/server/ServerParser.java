@@ -68,7 +68,7 @@ class ServerParser {
 				if (userCache.size() < 1000) {
 					// sufficient space - cache data of old user
 					userCache.put(lastUserId, new UserImpl(lastUserId,
-							(Song[]) userSongs.toArray()));
+							userSongs.toArray(new Song[0])));
 					pl.add(lastUserId, userTimesPlayed);
 				}
 
