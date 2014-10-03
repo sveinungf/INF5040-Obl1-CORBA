@@ -148,9 +148,10 @@ class ServerParser {
 
 			if (userId.equals(parts[0])) {
 				if (songId.equals(parts[1]))
-							timesPlayed = Integer.parseInt(parts[2]);
-				
-					userSongs.add(new SongImpl(parts[1], Integer.parseInt(parts[2])));
+					timesPlayed = Integer.parseInt(parts[2]);
+
+				userSongs
+						.add(new SongImpl(parts[1], Integer.parseInt(parts[2])));
 			}
 
 			lastUserId = parts[0];
