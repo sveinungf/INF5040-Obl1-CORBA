@@ -88,6 +88,6 @@ public class ProfilerServant extends ProfilerPOA {
 			if (songId.equals(s.id))
 				return s.play_count;
 		}
-		return -1;
+		return 0;
 	}
 }
