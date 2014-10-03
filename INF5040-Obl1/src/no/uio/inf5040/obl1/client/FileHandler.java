@@ -7,6 +7,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
+/**
+ * A simple class for reading and writing {@code String} objects to files.
+ * 
+ * @author Sveinung
+ *
+ */
 public class FileHandler {
 
 	private String filepath;
@@ -15,6 +21,15 @@ public class FileHandler {
 		this.filepath = filepath;
 	}
 
+	/**
+	 * Method for reading files with fields separated by whitespace. Reads a
+	 * file line by line and sends a {@code String} array to the supplied
+	 * {@link LineReadListener} implementation for each line read.
+	 * 
+	 * @param callback
+	 *            - Callback for each line read.
+	 * @throws IOException
+	 */
 	public void readTo(LineReadListener callback) throws IOException {
 		FileReader in = new FileReader(filepath);
 		BufferedReader reader = new BufferedReader(in);
@@ -27,6 +42,15 @@ public class FileHandler {
 		reader.close();
 	}
 
+	/**
+	 * Method for writing lines to a file. Each {@code String} in {@code lines}
+	 * is written to a separate line sequentially.
+	 * 
+	 * @param lines
+	 *            - An array of the lines to write to the file.
+	 * @throws FileNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
 	public void write(String[] lines) throws FileNotFoundException,
 			UnsupportedEncodingException {
 		PrintWriter writer = new PrintWriter(filepath, "UTF-8");
