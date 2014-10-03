@@ -34,10 +34,10 @@ public class RemoteInvocator implements LineReadListener {
 		String arg1 = fields[1];
 		String arg2 = fields.length > 2 ? fields[2] : null;
 
-		System.out.println("Sent: " + fields);
+		System.out.println("Sent: " + method);
 		String output = getOutput(method, arg1, arg2);
 		results.add(output);
-		System.out.println("Received: " + output);
+		System.out.println("Rcvd: " + output);
 	}
 
 	private String getOutput(String method, String arg1, String arg2) {
