@@ -73,7 +73,8 @@ public class ProfilerServant extends ProfilerPOA {
 
 		else {
 			System.out.println(" - Searching source file");
-			int timesPlayed = parser.parseGetUserProfile(user_id, song_id, user);
+			int timesPlayed = parser
+					.parseGetUserProfile(user_id, song_id, user);
 			System.out.println("getUserProfile: timesPlayed: " + timesPlayed);
 			return timesPlayed;
 		}

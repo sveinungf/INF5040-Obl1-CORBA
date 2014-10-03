@@ -76,7 +76,7 @@ public class RemoteInvocator implements LineReadListener {
 					cache.put(userId, userHolder.value);
 				} else {
 					fromCache = true;
-					
+
 					for (Song song : user.songs) {
 						if (song.id.equals(songId)) {
 							timesPlayed = song.play_count;
@@ -99,15 +99,15 @@ public class RemoteInvocator implements LineReadListener {
 			sb.append(".");
 			break;
 		}
-		
+
 		sb.append(" (");
 		sb.append((after - before) / 1000000);
 		sb.append(" ms");
-		
+
 		if (fromCache) {
 			sb.append(", from cache");
 		}
-		
+
 		sb.append(")");
 
 		return sb.toString();

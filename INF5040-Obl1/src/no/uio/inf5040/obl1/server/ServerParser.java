@@ -119,17 +119,16 @@ class ServerParser {
 
 		while (scan.hasNextLine()) {
 			parts = scan.nextLine().split("\\s+");
-			
-			if(userId.equals(lastUserId) && !userId.equals(parts[0]))
+
+			if (userId.equals(lastUserId) && !userId.equals(parts[0]))
 				break;
-			
-			if (userId.equals(parts[0])
-					&& songId.equals(parts[1])) 
+
+			if (userId.equals(parts[0]) && songId.equals(parts[1]))
 				timesPlayed += Integer.parseInt(parts[2]);
-			
+
 			lastUserId = parts[0];
 		}
-		
+
 		return timesPlayed;
 	}
 
@@ -143,20 +142,21 @@ class ServerParser {
 
 		while (scan.hasNextLine()) {
 			parts = scan.nextLine().split("\\s+");
-			
-			if(userId.equals(lastUserId) && userId.equals(parts[0]))
+
+			if (userId.equals(lastUserId) && userId.equals(parts[0]))
 				break;
-				
+
 			if (userId.equals(parts[0]) && songId.equals(parts[1])) {
 				timesPlayed += Integer.parseInt(parts[2]);
-				userSongs.add(new SongImpl(parts[1], Integer.parseInt(parts[2])));
+				userSongs
+						.add(new SongImpl(parts[1], Integer.parseInt(parts[2])));
 			}
-			
+
 			lastUserId = parts[0];
 		}
 
 		user.value = new UserImpl(userId, userSongs.toArray(new Song[0]));
-		
+
 		return timesPlayed;
 	}
 }
