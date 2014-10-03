@@ -16,7 +16,7 @@ public class ProfilerClient {
 	public static void main(String[] args) {
 		boolean cacheUsers = false;
 		String inputfile = null;
-		String outputfile = "output.txt";
+		String outputfile = null;
 
 		for (int i = 0; i < args.length; ++i) {
 			switch (args[i]) {
@@ -41,6 +41,11 @@ public class ProfilerClient {
 					+ " <path to input file> [" + ARG_CACHE + " " + ARG_OUTPUT
 					+ " <path to output file>]");
 			return;
+		}
+
+		if (outputfile == null) {
+			outputfile = cacheUsers ? "output-clientcache_on.txt"
+					: "output-clientcache_off.txt";
 		}
 
 		ORB orb = ORB.init(args, null);

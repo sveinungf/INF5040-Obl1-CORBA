@@ -19,6 +19,8 @@ import no.uio.inf5040.obl1.tasteprofile.UserHolder;
 public class RemoteInvocator implements LineReadListener {
 
 	private boolean cacheUsers;
+	private int numberOfInvocations;
+	private long totalInvocationTimeMs;
 	private List<String> results;
 	private Map<String, User> cache;
 	private Profiler profiler;
@@ -34,6 +36,8 @@ public class RemoteInvocator implements LineReadListener {
 	 */
 	public RemoteInvocator(Profiler profiler, boolean cacheUsers) {
 		this.cacheUsers = cacheUsers;
+		numberOfInvocations = 0;
+		totalInvocationTimeMs = 0L;
 		results = new ArrayList<String>();
 		cache = new HashMap<String, User>();
 		this.profiler = profiler;
@@ -45,7 +49,18 @@ public class RemoteInvocator implements LineReadListener {
 	 * @return The output results.
 	 */
 	public String[] getResults() {
+		results.add("");
+		results.add("Average invocation time: " + getAverageInvocationTimeMs());
 		return results.toArray(new String[0]);
+	}
+
+	/**
+	 * Returns the average invocation time in milliseconds.
+	 * 
+	 * @return The average time.
+	 */
+	public double getAverageInvocationTimeMs() {
+		return totalInvocationTimeMs / (double) numberOfInvocations;
 	}
 
 	@Override
@@ -135,8 +150,12 @@ public class RemoteInvocator implements LineReadListener {
 			break;
 		}
 
+		long invocationTimeMs = (after - before) / 1000000;
+		totalInvocationTimeMs += invocationTimeMs;
+		++numberOfInvocations;
+
 		sb.append(" (");
-		sb.append((after - before) / 1000000);
+		sb.append(invocationTimeMs);
 		sb.append(" ms");
 
 		if (fromCache) {
