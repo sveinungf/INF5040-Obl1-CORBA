@@ -32,6 +32,7 @@ public class ProfilerServant extends ProfilerPOA {
 	}
 
 	public int getTimesPlayed(String song_id) {
+		addDelay();
 		System.out.print("getTimesPlayed: id:" + song_id);
 
 		if (cacheEnabled && songCache.containsKey(song_id)) {
@@ -47,12 +48,14 @@ public class ProfilerServant extends ProfilerPOA {
 	}
 
 	public int getTimesPlayedByUser(String user_id, String song_id) {
+		addDelay();
 		System.out.print("getTimesPlayedByUser: userId:" + user_id
 				+ "\tsongId:" + song_id);
 
 		if (cacheEnabled && userCache.containsKey(user_id)) {
 			System.out.println(" - Returning cached value");
-			int toReturn = getUserPlayCount(userCache.get(user_id), song_id); 
+			int toReturn = getUserPlayCount(userCache.get(user_id), song_id);
+			System.out.println("Returning value: " + toReturn);
 			return toReturn;
 
 		}
@@ -60,11 +63,13 @@ public class ProfilerServant extends ProfilerPOA {
 		else {
 			System.out.println(" - Searching source file");
 			int toReturn = parser.parseGetTimesPlayedByUser(user_id, song_id);
+			System.out.println("Returning value: " + toReturn);
 			return toReturn;
 		}
 	}
 
 	public int getUserProfile(String user_id, String song_id, UserHolder user) {
+		addDelay();
 		System.out.print("getUserProfile: userId: " + user_id + " songId: "
 				+ song_id);
 
@@ -90,4 +95,16 @@ public class ProfilerServant extends ProfilerPOA {
 		}
 		return 0;
 	}
+	
+	private void addDelay() {
+		try {
+			Thread.sleep(60);			
+					}
+		catch(InterruptedException e) {
+			System.err.println("InterruptedException: " + e.getMessage());
+			e.printStackTrace(System.out);
+		}	
+	}
+	
+	
 }
