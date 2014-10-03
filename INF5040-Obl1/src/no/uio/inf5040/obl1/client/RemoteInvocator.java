@@ -59,7 +59,7 @@ public class RemoteInvocator implements LineReadListener {
 			sb.append(songId);
 			sb.append(" played ");
 			sb.append(timesPlayed);
-			sb.append(" times.");
+			sb.append(timesPlayed == 1 ? " time." : " times.");
 			break;
 		case "getTimesPlayedByUser":
 			userId = arg1;
@@ -94,7 +94,7 @@ public class RemoteInvocator implements LineReadListener {
 			sb.append(songId);
 			sb.append(" played ");
 			sb.append(timesPlayed);
-			sb.append(" times by user ");
+			sb.append(timesPlayed == 1 ? " time by user " : " times by user ");
 			sb.append(userId);
 			sb.append(".");
 			break;
@@ -105,7 +105,7 @@ public class RemoteInvocator implements LineReadListener {
 		sb.append(" ms");
 
 		if (fromCache) {
-			sb.append(", from cache");
+			sb.append(", from client cache");
 		}
 
 		sb.append(")");
