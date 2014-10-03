@@ -10,6 +10,12 @@ import no.uio.inf5040.obl1.tasteprofile.Song;
 import no.uio.inf5040.obl1.tasteprofile.User;
 import no.uio.inf5040.obl1.tasteprofile.UserHolder;
 
+/**
+ * The class that invokes methods on the server using CORBA.
+ * 
+ * @author Sveinung
+ *
+ */
 public class RemoteInvocator implements LineReadListener {
 
 	private boolean cacheUsers;
@@ -17,6 +23,15 @@ public class RemoteInvocator implements LineReadListener {
 	private Map<String, User> cache;
 	private Profiler profiler;
 
+	/**
+	 * Constructor for {@code RemoteInvocator}.
+	 * 
+	 * @param profiler
+	 *            - A {@link Profiler} implementation.
+	 * @param cacheUsers
+	 *            - {@code true} if the client should cache users, {@code false}
+	 *            otherwise.
+	 */
 	public RemoteInvocator(Profiler profiler, boolean cacheUsers) {
 		this.cacheUsers = cacheUsers;
 		results = new ArrayList<String>();
@@ -24,6 +39,11 @@ public class RemoteInvocator implements LineReadListener {
 		this.profiler = profiler;
 	}
 
+	/**
+	 * Returns the output results from all requests from the input file.
+	 * 
+	 * @return The output results.
+	 */
 	public String[] getResults() {
 		return results.toArray(new String[0]);
 	}
@@ -39,6 +59,18 @@ public class RemoteInvocator implements LineReadListener {
 		System.out.println("Rcvd: " + output);
 	}
 
+	/**
+	 * Calls on methods on the remote server and generates output strings from
+	 * the returned results.
+	 * 
+	 * @param method
+	 *            - The name of the method to be called.
+	 * @param arg1
+	 *            - First argument.
+	 * @param arg2
+	 *            - Second argument.
+	 * @return An output string of the results.
+	 */
 	private String getOutput(String method, String arg1, String arg2) {
 		String userId, songId;
 		StringBuilder sb = new StringBuilder();
@@ -70,7 +102,7 @@ public class RemoteInvocator implements LineReadListener {
 
 				if (user == null) {
 					UserHolder userHolder = new UserHolder();
-					
+
 					System.out.println("Sent: Calling getUserProfile");
 					timesPlayed = profiler.getUserProfile(userId, songId,
 							userHolder);
