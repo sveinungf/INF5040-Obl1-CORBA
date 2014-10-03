@@ -25,7 +25,7 @@ public class ProfilerServant extends ProfilerPOA {
 
 	private void init() {
 		if (cacheEnabled) {
-			System.out.print("Caching data...");
+			System.out.println("Caching data...");
 			parser.parseAndCache(songCache, userCache);
 		}
 	}
