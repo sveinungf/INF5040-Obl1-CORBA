@@ -1,5 +1,9 @@
 package no.uio.inf5040.obl1.server;
 
+/**
+ * @author halvor
+ *
+ */
 public class CachePriority {
 	UserPlayCount first;
 	int lowest, numElements;
@@ -9,6 +13,10 @@ public class CachePriority {
 		lowest = 0;
 	}
 
+	/**
+	 * @author halvor
+	 *
+	 */
 	private class UserPlayCount {
 		String userId;
 		int playCount;
@@ -21,6 +29,10 @@ public class CachePriority {
 		}
 	}
 
+	/**
+	 * @param userId
+	 * @param playCount
+	 */
 	void add(String userId, int playCount) {
 		UserPlayCount in = new UserPlayCount(userId, playCount);
 
@@ -53,6 +65,10 @@ public class CachePriority {
 		lowest = first.playCount;
 	}
 
+	
+	/**
+	 * @return
+	 */
 	String pop() {
 		String toReturn = first.userId;
 		first = first.next;
@@ -66,6 +82,10 @@ public class CachePriority {
 		return toReturn;
 	}
 
+	
+	/**
+	 * @return
+	 */
 	int getLowest() {
 		return first.playCount;
 	}

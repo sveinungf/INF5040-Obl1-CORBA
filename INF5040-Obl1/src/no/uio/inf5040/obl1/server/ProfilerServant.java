@@ -7,6 +7,10 @@ import no.uio.inf5040.obl1.tasteprofile.Song;
 import no.uio.inf5040.obl1.tasteprofile.User;
 import no.uio.inf5040.obl1.tasteprofile.UserHolder;
 
+/**
+ * @author halvor
+ *
+ */
 public class ProfilerServant extends ProfilerPOA {
 
 	boolean cacheEnabled;
@@ -23,6 +27,10 @@ public class ProfilerServant extends ProfilerPOA {
 		init();
 	}
 
+	
+	/**
+	 * 
+	 */
 	private void init() {
 		if (cacheEnabled) {
 			System.out.println("Caching data...");
@@ -31,6 +39,8 @@ public class ProfilerServant extends ProfilerPOA {
 		}
 	}
 
+	
+	@Override
 	public int getTimesPlayed(String song_id) {
 		addDelay();
 		System.out.print("getTimesPlayed: id:" + song_id);
@@ -47,6 +57,8 @@ public class ProfilerServant extends ProfilerPOA {
 
 	}
 
+	
+	@Override
 	public int getTimesPlayedByUser(String user_id, String song_id) {
 		addDelay();
 		System.out.print("getTimesPlayedByUser: userId:" + user_id
@@ -68,6 +80,7 @@ public class ProfilerServant extends ProfilerPOA {
 		}
 	}
 
+	@Override
 	public int getUserProfile(String user_id, String song_id, UserHolder user) {
 		addDelay();
 		System.out.print("getUserProfile: userId: " + user_id + " songId: "
@@ -88,6 +101,12 @@ public class ProfilerServant extends ProfilerPOA {
 		}
 	}
 
+	
+	/**
+	 * @param usr
+	 * @param songId
+	 * @return
+	 */
 	int getUserPlayCount(User usr, String songId) {
 		for (Song s : usr.songs) {
 			if (songId.equals(s.id))
@@ -96,6 +115,9 @@ public class ProfilerServant extends ProfilerPOA {
 		return 0;
 	}
 	
+	/**
+	 * 
+	 */
 	private void addDelay() {
 		try {
 			Thread.sleep(60);			

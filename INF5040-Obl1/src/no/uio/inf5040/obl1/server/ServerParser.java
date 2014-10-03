@@ -9,6 +9,11 @@ import no.uio.inf5040.obl1.tasteprofile.Song;
 import no.uio.inf5040.obl1.tasteprofile.User;
 import no.uio.inf5040.obl1.tasteprofile.UserHolder;
 
+
+/**
+ * @author halvor
+ *
+ */
 class ServerParser {
 	private String fileName;
 	Scanner scan;
@@ -18,6 +23,10 @@ class ServerParser {
 		initScanner();
 	}
 
+	
+	/**
+	 * 
+	 */
 	private void initScanner() {
 		try {
 			scan = new Scanner(new File(fileName));
@@ -26,6 +35,12 @@ class ServerParser {
 		}
 	}
 
+	
+	
+	/**
+	 * @param songCache
+	 * @param userCache
+	 */
 	void parseAndCache(HashMap<String, Integer> songCache,
 			HashMap<String, User> userCache) {
 
@@ -83,6 +98,15 @@ class ServerParser {
 			addUser(lastUserId, userTimesPlayed, userSongs, userCache, cp);
 	}
 	
+	
+	
+	/**
+	 * @param userId
+	 * @param userTimesPlayed
+	 * @param userSongs
+	 * @param userCache
+	 * @param cp
+	 */
 	private void addUser(String userId, int userTimesPlayed, ArrayList<Song> userSongs, HashMap<String, User> userCache, CachePriority cp) {
 		if (userCache.size() < 1000) {
 			// sufficient space - cache data of old user
@@ -103,6 +127,11 @@ class ServerParser {
 		
 	}
 
+	
+	/**
+	 * @param songId
+	 * @return
+	 */
 	int parseGetTimesPlayed(String songId) {
 		initScanner();
 		int timesPlayed = 0;
@@ -119,6 +148,12 @@ class ServerParser {
 		return timesPlayed;
 	}
 
+	
+	/**
+	 * @param userId
+	 * @param songId
+	 * @return
+	 */
 	int parseGetTimesPlayedByUser(String userId, String songId) {
 		initScanner();
 		int timesPlayed = 0;
@@ -140,6 +175,14 @@ class ServerParser {
 		return timesPlayed;
 	}
 
+	
+	
+	/**
+	 * @param userId
+	 * @param songId
+	 * @param user
+	 * @return
+	 */
 	int parseGetUserProfile(String userId, String songId, UserHolder user) {
 		initScanner();
 		int timesPlayed = 0;
