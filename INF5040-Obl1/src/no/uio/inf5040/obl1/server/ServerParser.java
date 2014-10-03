@@ -31,6 +31,7 @@ class ServerParser {
 
 		int userTimesPlayed = 0;
 		int totalPlayCount, playCount;
+		totalPlayCount = playCount = 0;
 		String[] parts = null;
 		String lastUserId = null;
 		ArrayList<Song> userSongs = null;
