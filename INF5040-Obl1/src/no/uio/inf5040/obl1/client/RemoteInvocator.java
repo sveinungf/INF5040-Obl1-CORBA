@@ -34,7 +34,6 @@ public class RemoteInvocator implements LineReadListener {
 		String arg1 = fields[1];
 		String arg2 = fields.length > 2 ? fields[2] : null;
 
-		System.out.println("Sent: " + method);
 		String output = getOutput(method, arg1, arg2);
 		results.add(output);
 		System.out.println("Rcvd: " + output);
@@ -52,6 +51,7 @@ public class RemoteInvocator implements LineReadListener {
 		case "getTimesPlayed":
 			songId = arg1;
 
+			System.out.println("Sent: Calling getTimesPlayed");
 			timesPlayed = profiler.getTimesPlayed(songId);
 			after = System.nanoTime();
 
@@ -70,6 +70,8 @@ public class RemoteInvocator implements LineReadListener {
 
 				if (user == null) {
 					UserHolder userHolder = new UserHolder();
+					
+					System.out.println("Sent: Calling getUserProfile");
 					timesPlayed = profiler.getUserProfile(userId, songId,
 							userHolder);
 
@@ -85,6 +87,7 @@ public class RemoteInvocator implements LineReadListener {
 					}
 				}
 			} else {
+				System.out.println("Sent: Calling getTimesPlayedByUser");
 				timesPlayed = profiler.getTimesPlayedByUser(userId, songId);
 			}
 
