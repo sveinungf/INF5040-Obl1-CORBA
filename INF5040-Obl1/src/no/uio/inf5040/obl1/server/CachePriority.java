@@ -74,14 +74,13 @@ public class CachePriority {
 				temp.prev = in;
 			}
 		}
-
 		lowest = first.playCount;
 	}
 
 	
 	/**
 	 * Removes the first user in the list (the least active user)
-	 * @return the user that was removed
+	 * @return ID of the user that was removed
 	 */
 	String pop() {
 		String toReturn = first.userId;
@@ -98,9 +97,9 @@ public class CachePriority {
 
 	
 	/**
-	 * @return ID of the least active user currently in the list
+	 * @return least active user's play count
 	 */
 	int getLowest() {
-		return first.playCount;
+		return lowest;
 	}
 }
