@@ -11,12 +11,13 @@ import no.uio.inf5040.obl1.tasteprofile.UserHolder;
 
 
 /**
+ * Class for parsing from input file
+ * 
  * @author halvor
- *
  */
 class ServerParser {
 	private String fileName;
-	Scanner scan;
+	private Scanner scan;
 
 	ServerParser(String fileName) {
 		this.fileName = fileName;
@@ -25,21 +26,24 @@ class ServerParser {
 
 	
 	/**
-	 * 
+	 * Initiates scanner
 	 */
 	private void initScanner() {
 		try {
 			scan = new Scanner(new File(fileName));
-		} catch (FileNotFoundException e) {
-			System.err.println("FileNotFoundException: " + e.getMessage());
+		} catch (Exception e) {
+			System.err.println("Exception: " + e.getMessage());
 		}
 	}
 
 	
 	
 	/**
-	 * @param songCache
-	 * @param userCache
+	 * Method that parses from input file and caches relevant data
+	 * <br>All songs and the top 1000 most active users are cached
+	 * 
+	 * @param songCache - {@link HashMap} for storing {@code Song} objects
+	 * @param userCache - {@link HashMap} for storing {@code User} objects
 	 */
 	void parseAndCache(HashMap<String, Integer> songCache,
 			HashMap<String, User> userCache) {
@@ -101,27 +105,30 @@ class ServerParser {
 	
 	
 	/**
-	 * @param userId
-	 * @param userTimesPlayed
-	 * @param userSongs
-	 * @param userCache
-	 * @param cp
+	 * Adds a user to cache
+	 * <br>Conditions: cache is not full or user is more active than currently least active user in cache
+	 * 
+	 * @param userId - ID of the user to add
+	 * @param userPlayCount - total play count for user
+	 * @param userSongs - {@link ArrayList} of users songs
+	 * @param userCache - {@link HashMap} containing cached users
+	 * @param cp - {@link CachePriority} containing info about cached users
 	 */
-	private void addUser(String userId, int userTimesPlayed, ArrayList<Song> userSongs, HashMap<String, User> userCache, CachePriority cp) {
+	private void addUser(String userId, int userPlayCount, ArrayList<Song> userSongs, HashMap<String, User> userCache, CachePriority cp) {
 		if (userCache.size() < 1000) {
-			// sufficient space - cache data of old user
+			// sufficient space - cache user
 			userCache.put(userId, new UserImpl(userId,
 					userSongs.toArray(new Song[0])));
-			cp.add(userId, userTimesPlayed);
+			cp.add(userId, userPlayCount);
 		}
 
-		else if (userTimesPlayed > cp.getLowest()) {
+		else if (userPlayCount > cp.getLowest()) {
 			// more active user - cache and remove least active user
 			String toRemove = cp.pop();
 			userCache.remove(toRemove);
 			userCache.put(userId, new UserImpl(userId,
 					userSongs.toArray(new Song[0])));
-			cp.add(userId, userTimesPlayed);
+			cp.add(userId, userPlayCount);
 		}
 
 		
@@ -129,8 +136,9 @@ class ServerParser {
 
 	
 	/**
-	 * @param songId
-	 * @return
+	 * Reads the whole input file and computes how many times a specific song has been played
+	 * @param songId - ID of the song
+	 * @return total play count of song
 	 */
 	int parseGetTimesPlayed(String songId) {
 		initScanner();
@@ -150,9 +158,10 @@ class ServerParser {
 
 	
 	/**
-	 * @param userId
-	 * @param songId
-	 * @return
+	 * Reads the whole input file and computes how many times a specific song has been played by a specific user
+	 * @param userId - ID of the user
+	 * @param songId - ID of the song
+	 * @return play count for this song and user
 	 */
 	int parseGetTimesPlayedByUser(String userId, String songId) {
 		initScanner();
@@ -178,10 +187,14 @@ class ServerParser {
 	
 	
 	/**
-	 * @param userId
-	 * @param songId
-	 * @param user
-	 * @return
+	 * Reads the whole input file and computes:
+	 * <br>-how many times a specific song has been played by a specific user
+	 * <br>-profile of the user
+	 * 
+	 * @param userId - ID of the user
+	 * @param songId - ID of the song
+	 * @param user - {@link UserHolder} object for containing profile
+	 * @return play count for this song and user
 	 */
 	int parseGetUserProfile(String userId, String songId, UserHolder user) {
 		initScanner();

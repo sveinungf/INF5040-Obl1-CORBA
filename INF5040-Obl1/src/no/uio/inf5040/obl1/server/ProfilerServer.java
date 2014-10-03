@@ -12,6 +12,8 @@ import org.omg.PortableServer.POAHelper;
 
 
 /**
+ * Main class for the server
+ * 
  * @author halvor
  *
  */

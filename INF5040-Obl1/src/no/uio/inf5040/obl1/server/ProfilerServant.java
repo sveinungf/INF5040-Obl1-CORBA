@@ -29,7 +29,8 @@ public class ProfilerServant extends ProfilerPOA {
 
 	
 	/**
-	 * 
+	 * Initiates the ProfilerServant
+	 * <br>Computes cache of songs and most active users if caching is enabled
 	 */
 	private void init() {
 		if (cacheEnabled) {
@@ -103,12 +104,14 @@ public class ProfilerServant extends ProfilerPOA {
 
 	
 	/**
-	 * @param usr
-	 * @param songId
-	 * @return
+	 * Gets a users play count for a given song
+	 * 
+	 * @param user - {@link User} object containing user 
+	 * @param songId - ID of song to lookup
+	 * @return play count for the given song
 	 */
-	int getUserPlayCount(User usr, String songId) {
-		for (Song s : usr.songs) {
+	int getUserPlayCount(User user, String songId) {
+		for (Song s : user.songs) {
 			if (songId.equals(s.id))
 				return s.play_count;
 		}
@@ -116,7 +119,7 @@ public class ProfilerServant extends ProfilerPOA {
 	}
 	
 	/**
-	 * 
+	 * Adds a delay of 60 ms to simulate network latency
 	 */
 	private void addDelay() {
 		try {
@@ -126,7 +129,5 @@ public class ProfilerServant extends ProfilerPOA {
 			System.err.println("InterruptedException: " + e.getMessage());
 			e.printStackTrace(System.out);
 		}	
-	}
-	
-	
+	}	
 }
