@@ -35,7 +35,7 @@ class ServerParser {
 		String lastUserId = null;
 		ArrayList<Song> userSongs = null;
 
-		CachePriority pl = new CachePriority();
+		CachePriority cp = new CachePriority();
 
 		while (scan.hasNextLine()) {
 
@@ -64,23 +64,7 @@ class ServerParser {
 			/* caching of users */
 			if (!lastUserId.equals(parts[0])) {
 				// new userId - cache or throw away user data
-
-				if (userCache.size() < 1000) {
-					// sufficient space - cache data of old user
-					userCache.put(lastUserId, new UserImpl(lastUserId,
-							userSongs.toArray(new Song[0])));
-					pl.add(lastUserId, userTimesPlayed);
-				}
-
-				else if (userTimesPlayed > pl.getLowest()) {
-					// more active user - cache and remove least active user
-					String toRemove = pl.pop();
-					userCache.remove(toRemove);
-					userCache.put(lastUserId, new UserImpl(lastUserId,
-							userSongs.toArray(new Song[0])));
-					pl.add(lastUserId, userTimesPlayed);
-				}
-
+				addUser(lastUserId, userTimesPlayed, userSongs, userCache, cp);
 				userSongs = new ArrayList<Song>();
 				userTimesPlayed = playCount;
 			}
@@ -93,6 +77,29 @@ class ServerParser {
 
 			lastUserId = parts[0];
 		}
+		
+		if(lastUserId != null)
+			addUser(lastUserId, userTimesPlayed, userSongs, userCache, cp);
+	}
+	
+	private void addUser(String userId, int userTimesPlayed, ArrayList<Song> userSongs, HashMap<String, User> userCache, CachePriority cp) {
+		if (userCache.size() < 1000) {
+			// sufficient space - cache data of old user
+			userCache.put(userId, new UserImpl(userId,
+					userSongs.toArray(new Song[0])));
+			cp.add(userId, userTimesPlayed);
+		}
+
+		else if (userTimesPlayed > cp.getLowest()) {
+			// more active user - cache and remove least active user
+			String toRemove = cp.pop();
+			userCache.remove(toRemove);
+			userCache.put(userId, new UserImpl(userId,
+					userSongs.toArray(new Song[0])));
+			cp.add(userId, userTimesPlayed);
+		}
+
+		
 	}
 
 	int parseGetTimesPlayed(String songId) {
