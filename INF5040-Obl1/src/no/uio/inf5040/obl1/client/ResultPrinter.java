@@ -71,8 +71,9 @@ public class ResultPrinter {
 	/**
 	 * Prints the average invocation time based on previous results.
 	 */
-	public void printAverageInvocationTime() {
+	public void printInvocationTimeStats() {
 		double averageTimeInMs = totalTimeInMs / (double) results.size();
+		printResult("Total invocation time: " + totalTimeInMs + " ms");
 		printResult("Average invocation time: " + averageTimeInMs + " ms");
 	}
 

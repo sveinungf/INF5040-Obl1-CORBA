@@ -34,10 +34,12 @@ public class FileHandler {
 	public void readTo(LineReadListener callback) throws IOException {
 		FileReader in = new FileReader(filepath);
 		BufferedReader reader = new BufferedReader(in);
+		int lineNumber = 0;
 
 		String line;
 		while ((line = reader.readLine()) != null) {
-			callback.onLineRead(line.split("\\s+"));
+			++lineNumber;
+			callback.onLineRead(lineNumber, line.split("\\s+"));
 		}
 
 		reader.close();

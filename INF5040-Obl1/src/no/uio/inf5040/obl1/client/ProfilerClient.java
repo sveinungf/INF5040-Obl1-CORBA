@@ -66,7 +66,7 @@ public class ProfilerClient {
 
 			infile.readTo(invocator);
 
-			printer.printAverageInvocationTime();
+			printer.printInvocationTimeStats();
 			printer.printResultsToFile(outputfile);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

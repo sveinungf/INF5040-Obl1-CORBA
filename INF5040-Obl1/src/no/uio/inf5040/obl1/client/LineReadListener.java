@@ -12,8 +12,10 @@ public interface LineReadListener {
 	/**
 	 * The method called when a line has been read from file.
 	 * 
+	 * @param lineNumber
+	 *            - The current line number.
 	 * @param fields
 	 *            - An array of fields from the line read.
 	 */
-	void onLineRead(String[] fields);
+	void onLineRead(int lineNumber, String[] fields);
 }
