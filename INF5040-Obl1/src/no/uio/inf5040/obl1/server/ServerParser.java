@@ -77,7 +77,7 @@ class ServerParser {
 					String toRemove = pl.pop();
 					userCache.remove(toRemove);
 					userCache.put(lastUserId, new UserImpl(lastUserId,
-							(Song[]) userSongs.toArray()));
+							userSongs.toArray(new Song[0])));
 					pl.add(lastUserId, userTimesPlayed);
 				}
 
