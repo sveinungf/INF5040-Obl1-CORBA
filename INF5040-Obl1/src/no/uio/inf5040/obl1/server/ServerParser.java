@@ -143,7 +143,7 @@ class ServerParser {
 		while (scan.hasNextLine()) {
 			parts = scan.nextLine().split("\\s+");
 
-			if (userId.equals(lastUserId) && userId.equals(parts[0]))
+			if (userId.equals(lastUserId) && !userId.equals(parts[0]))
 				break;
 
 			if (userId.equals(parts[0]) && songId.equals(parts[1])) {
