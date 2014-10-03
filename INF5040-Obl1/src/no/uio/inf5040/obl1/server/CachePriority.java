@@ -14,7 +14,7 @@ public class CachePriority {
 		int playCount;
 
 		UserPlayCount next, prev;
-
+			
 		UserPlayCount(String userId, int playCount) {
 			this.userId = userId;
 			this.playCount = playCount;
@@ -30,12 +30,15 @@ public class CachePriority {
 		else {
 			UserPlayCount temp = first;
 
-			while (in.playCount > temp.playCount)
+			while (in.playCount > temp.playCount) {
+					if(temp.next == null)
+						break;
 				temp = temp.next;
+			}
 
 			in.next = temp;
 			in.prev = temp.prev;
-			if (temp.prev != null)
+			if(temp.prev != null)
 				temp.prev.next = in;
 			temp.prev = in;
 		}
