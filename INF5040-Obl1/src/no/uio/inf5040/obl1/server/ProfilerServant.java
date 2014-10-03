@@ -27,6 +27,7 @@ public class ProfilerServant extends ProfilerPOA {
 		if (cacheEnabled) {
 			System.out.println("Caching data...");
 			parser.parseAndCache(songCache, userCache);
+			System.out.println("Caching done");
 		}
 	}
 
@@ -51,13 +52,15 @@ public class ProfilerServant extends ProfilerPOA {
 
 		if (cacheEnabled && userCache.containsKey(user_id)) {
 			System.out.println(" - Returning cached value");
-			return getUserPlayCount(userCache.get(user_id), song_id);
+			int toReturn = getUserPlayCount(userCache.get(user_id), song_id); 
+			return toReturn;
 
 		}
 
 		else {
 			System.out.println(" - Searching source file");
-			return parser.parseGetTimesPlayedByUser(user_id, song_id);
+			int toReturn = parser.parseGetTimesPlayedByUser(user_id, song_id);
+			return toReturn;
 		}
 	}
 
