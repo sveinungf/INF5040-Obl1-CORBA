@@ -1,8 +1,6 @@
 package no.uio.inf5040.obl1.client;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import no.uio.inf5040.obl1.tasteprofile.Profiler;
@@ -19,11 +17,9 @@ import no.uio.inf5040.obl1.tasteprofile.UserHolder;
 public class RemoteInvocator implements LineReadListener {
 
 	private boolean cacheUsers;
-	private int numberOfInvocations;
-	private long totalInvocationTimeMs;
-	private List<String> results;
 	private Map<String, User> cache;
 	private Profiler profiler;
+	private ResultPrinter resultPrinter;
 
 	/**
 	 * Constructor for {@code RemoteInvocator}.
@@ -33,34 +29,15 @@ public class RemoteInvocator implements LineReadListener {
 	 * @param cacheUsers
 	 *            - {@code true} if the client should cache users, {@code false}
 	 *            otherwise.
+	 * @param resultPrinter
+	 *            - An object that prints output from the results.
 	 */
-	public RemoteInvocator(Profiler profiler, boolean cacheUsers) {
+	public RemoteInvocator(Profiler profiler, boolean cacheUsers,
+			ResultPrinter resultPrinter) {
 		this.cacheUsers = cacheUsers;
-		numberOfInvocations = 0;
-		totalInvocationTimeMs = 0L;
-		results = new ArrayList<String>();
 		cache = new HashMap<String, User>();
 		this.profiler = profiler;
-	}
-
-	/**
-	 * Returns the output results from all requests from the input file.
-	 * 
-	 * @return The output results.
-	 */
-	public String[] getResults() {
-		results.add("");
-		results.add("Average invocation time: " + getAverageInvocationTimeMs());
-		return results.toArray(new String[0]);
-	}
-
-	/**
-	 * Returns the average invocation time in milliseconds.
-	 * 
-	 * @return The average time.
-	 */
-	public double getAverageInvocationTimeMs() {
-		return totalInvocationTimeMs / (double) numberOfInvocations;
+		this.resultPrinter = resultPrinter;
 	}
 
 	@Override
@@ -69,48 +46,34 @@ public class RemoteInvocator implements LineReadListener {
 		String arg1 = fields[1];
 		String arg2 = fields.length > 2 ? fields[2] : null;
 
-		String output = getOutput(method, arg1, arg2);
-		results.add(output);
-		System.out.println("Rcvd: " + output);
+		System.out.println("Calling " + method);
+		invoke(method, arg1, arg2);
 	}
 
 	/**
-	 * Calls on methods on the remote server and generates output strings from
-	 * the returned results.
+	 * Calls on a method on the remote server. The result is sent to the
+	 * {@link ResultPrinter} object.
 	 * 
 	 * @param method
 	 *            - The name of the method to be called.
-	 * @param arg1
-	 *            - First argument.
-	 * @param arg2
-	 *            - Second argument.
-	 * @return An output string of the results.
+	 * @param args
+	 *            - The arguments to the method.
 	 */
-	private String getOutput(String method, String arg1, String arg2) {
-		String userId, songId;
-		StringBuilder sb = new StringBuilder();
+	private void invoke(String method, String... args) {
+		String userId = null;
+		String songId = null;
 		boolean fromCache = false;
-		int timesPlayed = 0;
+		int result = 0;
 		long before = System.nanoTime();
-		long after = 0L;
 
 		switch (method) {
 		case "getTimesPlayed":
-			songId = arg1;
-
-			System.out.println("Sent: Calling getTimesPlayed");
-			timesPlayed = profiler.getTimesPlayed(songId);
-			after = System.nanoTime();
-
-			sb.append("Song ");
-			sb.append(songId);
-			sb.append(" played ");
-			sb.append(timesPlayed);
-			sb.append(timesPlayed == 1 ? " time." : " times.");
+			songId = args[0];
+			result = profiler.getTimesPlayed(songId);
 			break;
 		case "getTimesPlayedByUser":
-			userId = arg1;
-			songId = arg2;
+			userId = args[0];
+			songId = args[1];
 
 			if (cacheUsers) {
 				User user = cache.get(userId);
@@ -118,52 +81,31 @@ public class RemoteInvocator implements LineReadListener {
 				if (user == null) {
 					UserHolder userHolder = new UserHolder();
 
-					System.out.println("Sent: Calling getUserProfile");
-					timesPlayed = profiler.getUserProfile(userId, songId,
-							userHolder);
+					result = profiler
+							.getUserProfile(userId, songId, userHolder);
 
 					cache.put(userId, userHolder.value);
 				} else {
 					fromCache = true;
 
 					for (Song song : user.songs) {
-						if (song.id.equals(songId)) {
-							timesPlayed = song.play_count;
+						if (songId.equals(song.id)) {
+							result = song.play_count;
 							break;
 						}
 					}
 				}
 			} else {
-				System.out.println("Sent: Calling getTimesPlayedByUser");
-				timesPlayed = profiler.getTimesPlayedByUser(userId, songId);
+				result = profiler.getTimesPlayedByUser(userId, songId);
 			}
 
-			after = System.nanoTime();
-
-			sb.append("Song ");
-			sb.append(songId);
-			sb.append(" played ");
-			sb.append(timesPlayed);
-			sb.append(timesPlayed == 1 ? " time by user " : " times by user ");
-			sb.append(userId);
-			sb.append(".");
 			break;
 		}
 
-		long invocationTimeMs = (after - before) / 1000000;
-		totalInvocationTimeMs += invocationTimeMs;
-		++numberOfInvocations;
+		long after = System.nanoTime();
+		long timeInMs = (after - before) / 1000000;
 
-		sb.append(" (");
-		sb.append(invocationTimeMs);
-		sb.append(" ms");
-
-		if (fromCache) {
-			sb.append(", from client cache");
-		}
-
-		sb.append(")");
-
-		return sb.toString();
+		resultPrinter.onResponse(method, songId, userId, result, timeInMs,
+				fromCache);
 	}
 }

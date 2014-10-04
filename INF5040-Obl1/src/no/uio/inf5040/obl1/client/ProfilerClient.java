@@ -58,15 +58,16 @@ public class ProfilerClient {
 			String name = "Profiler";
 			Profiler profiler = ProfilerHelper.narrow(ncRef.resolve_str(name));
 
+			ResultPrinter printer = new ResultPrinter();
 			RemoteInvocator invocator = new RemoteInvocator(profiler,
-					cacheUsers);
+					cacheUsers, printer);
 
 			FileHandler infile = new FileHandler(inputfile);
-			FileHandler outfile = new FileHandler(outputfile);
 
 			infile.readTo(invocator);
 
-			outfile.write(invocator.getResults());
+			printer.printAverageInvocationTime();
+			printer.printResultsToFile(outputfile);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

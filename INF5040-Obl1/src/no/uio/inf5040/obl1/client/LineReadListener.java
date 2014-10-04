@@ -10,7 +10,7 @@ package no.uio.inf5040.obl1.client;
 public interface LineReadListener {
 
 	/**
-	 * The method called when a line has been read.
+	 * The method called when a line has been read from file.
 	 * 
 	 * @param fields
 	 *            - An array of fields from the line read.

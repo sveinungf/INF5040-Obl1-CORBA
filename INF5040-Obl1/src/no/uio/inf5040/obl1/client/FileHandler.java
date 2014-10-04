@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 /**
  * A simple class for reading and writing {@code String} objects to files.
@@ -47,11 +48,11 @@ public class FileHandler {
 	 * is written to a separate line sequentially.
 	 * 
 	 * @param lines
-	 *            - An array of the lines to write to the file.
+	 *            - A list of the lines to write to the file.
 	 * @throws FileNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
-	public void write(String[] lines) throws FileNotFoundException,
+	public void write(List<String> lines) throws FileNotFoundException,
 			UnsupportedEncodingException {
 		PrintWriter writer = new PrintWriter(filepath, "UTF-8");
 
