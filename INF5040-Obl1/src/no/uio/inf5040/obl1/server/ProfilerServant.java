@@ -27,20 +27,24 @@ public class ProfilerServant extends ProfilerPOA {
 		init();
 	}
 
-	
 	/**
-	 * Initiates the ProfilerServant
-	 * <br>Computes cache of songs and most active users if caching is enabled
+	 * Initiates the ProfilerServant <br>
+	 * Computes cache of songs and most active users if caching is enabled
 	 */
 	private void init() {
 		if (cacheEnabled) {
 			System.out.println("Caching data...");
-			parser.parseAndCache(songCache, userCache);
+
+			try {
+				parser.parseAndCache(songCache, userCache);
+			} catch (Exception e) {
+				System.err.println("Exception: " + e.getMessage());
+			}
+
 			System.out.println("Caching done");
 		}
 	}
 
-	
 	@Override
 	public int getTimesPlayed(String song_id) {
 		addDelay();
@@ -53,12 +57,21 @@ public class ProfilerServant extends ProfilerPOA {
 
 		else {
 			System.out.println(" - Searching source file");
-			return parser.parseGetTimesPlayed(song_id);
+			int timesPlayed = -1;
+
+			try {
+				timesPlayed = parser.parseGetTimesPlayed(song_id);
+			} catch (Exception e) {
+				System.err.println("Exception: " + e.getMessage());
+				e.printStackTrace();
+			}
+
+			return timesPlayed;
+
 		}
 
 	}
 
-	
 	@Override
 	public int getTimesPlayedByUser(String user_id, String song_id) {
 		addDelay();
@@ -67,17 +80,25 @@ public class ProfilerServant extends ProfilerPOA {
 
 		if (cacheEnabled && userCache.containsKey(user_id)) {
 			System.out.println(" - Returning cached value");
-			int toReturn = getUserPlayCount(userCache.get(user_id), song_id);
-			System.out.println("Returning value: " + toReturn);
-			return toReturn;
+			int timesPlayed = getUserPlayCount(userCache.get(user_id), song_id);
+			System.out.println("Returning value: " + timesPlayed);
+			return timesPlayed;
 
 		}
 
 		else {
 			System.out.println(" - Searching source file");
-			int toReturn = parser.parseGetTimesPlayedByUser(user_id, song_id);
-			System.out.println("Returning value: " + toReturn);
-			return toReturn;
+			int timesPlayed = -1;
+			
+			try {
+				timesPlayed = parser.parseGetTimesPlayedByUser(user_id, song_id);
+			} catch (Exception e) {
+				System.err.println("Exception: " + e.getMessage());
+				e.printStackTrace();
+			}
+			System.out.println("Returning value: " + timesPlayed);
+			
+			return timesPlayed;
 		}
 	}
 
@@ -95,19 +116,26 @@ public class ProfilerServant extends ProfilerPOA {
 
 		else {
 			System.out.println(" - Searching source file");
-			int timesPlayed = parser
-					.parseGetUserProfile(user_id, song_id, user);
+			int timesPlayed = -1;
+			try {
+				timesPlayed = parser.parseGetUserProfile(user_id, song_id, user);
+			} catch (Exception e) {
+				System.err.println("Exception: " + e.getMessage());
+				e.printStackTrace();
+			}
 			System.out.println("getUserProfile: timesPlayed: " + timesPlayed);
+			
 			return timesPlayed;
 		}
 	}
 
-	
 	/**
 	 * Gets a users play count for a given song
 	 * 
-	 * @param user - {@link User} object containing user 
-	 * @param songId - ID of song to lookup
+	 * @param user
+	 *            - {@link User} object containing user
+	 * @param songId
+	 *            - ID of song to lookup
 	 * @return play count for the given song
 	 */
 	int getUserPlayCount(User user, String songId) {
@@ -117,17 +145,16 @@ public class ProfilerServant extends ProfilerPOA {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * Adds a delay of 60 ms to simulate network latency
 	 */
 	private void addDelay() {
 		try {
-			Thread.sleep(60);			
-					}
-		catch(InterruptedException e) {
+			Thread.sleep(60);
+		} catch (InterruptedException e) {
 			System.err.println("InterruptedException: " + e.getMessage());
 			e.printStackTrace(System.out);
-		}	
-	}	
+		}
+	}
 }

@@ -17,20 +17,21 @@ import no.uio.inf5040.obl1.tasteprofile.UserHolder;
  */
 class ServerParser {
 	private String fileName;
-	private Scanner scan;
+	BufferedReader reader;
+	
 
 	ServerParser(String fileName) {
 		this.fileName = fileName;
-		initScanner();
+		initReader();
 	}
 
 	
 	/**
-	 * Initiates scanner
+	 * Initiates buffered
 	 */
-	private void initScanner() {
+	private void initReader() {
 		try {
-			scan = new Scanner(new File(fileName));
+			reader = new BufferedReader(new FileReader(fileName));
 		} catch (Exception e) {
 			System.err.println("Exception: " + e.getMessage());
 		}
@@ -44,22 +45,25 @@ class ServerParser {
 	 * 
 	 * @param songCache - {@link HashMap} for storing {@code Song} objects
 	 * @param userCache - {@link HashMap} for storing {@code User} objects
+	 * @throws IOException 
+	 * @throws NumberFormatException 
 	 */
 	void parseAndCache(HashMap<String, Integer> songCache,
-			HashMap<String, User> userCache) {
+			HashMap<String, User> userCache) throws NumberFormatException, IOException {
 
 		int userTimesPlayed = 0;
 		int totalPlayCount, playCount;
 		totalPlayCount = playCount = 0;
 		String[] parts = null;
+		String line = null;
 		String lastUserId = null;
 		ArrayList<Song> userSongs = null;
 
 		CachePriority cp = new CachePriority();
 
-		while (scan.hasNextLine()) {
+		while ((line = reader.readLine()) != null){
 
-			parts = scan.nextLine().split("\\s+");
+			parts = line.split("\\s+");
 			// parts[0] = userId, parts[1] = songId, parts[2] = playCount
 
 			if (lastUserId == null) {
@@ -139,20 +143,22 @@ class ServerParser {
 	 * Reads the whole input file and computes how many times a specific song has been played
 	 * @param songId - ID of the song
 	 * @return total play count of song
+	 * @throws IOException 
+	 * @throws NumberFormatException 
 	 */
-	int parseGetTimesPlayed(String songId) {
-		initScanner();
+	int parseGetTimesPlayed(String songId) throws NumberFormatException, IOException {
+		initReader();
 		int timesPlayed = 0;
-		String[] parts = null;
-
-		while (scan.hasNextLine()) {
-			parts = scan.nextLine().split("\\s+");
+		String line;
+		String parts[];
+		while ((line = reader.readLine()) != null) {
+			parts = line.split("\\s+");
 
 			if (songId.equals(parts[1])) {
 				timesPlayed += Integer.parseInt(parts[2]);
 			}
 		}
-
+		reader.close();
 		return timesPlayed;
 	}
 
@@ -162,15 +168,18 @@ class ServerParser {
 	 * @param userId - ID of the user
 	 * @param songId - ID of the song
 	 * @return play count for this song and user
+	 * @throws IOException 
+	 * @throws NumberFormatException 
 	 */
-	int parseGetTimesPlayedByUser(String userId, String songId) {
-		initScanner();
+	int parseGetTimesPlayedByUser(String userId, String songId) throws NumberFormatException, IOException {
+		initReader();
 		int timesPlayed = 0;
 		String lastUserId = null;
 		String[] parts;
+		String line;
 
-		while (scan.hasNextLine()) {
-			parts = scan.nextLine().split("\\s+");
+		while ((line = reader.readLine()) != null) {
+			parts = line.split("\\s+");
 
 			if (userId.equals(lastUserId) && !userId.equals(parts[0]))
 				break;
@@ -195,17 +204,20 @@ class ServerParser {
 	 * @param songId - ID of the song
 	 * @param user - {@link UserHolder} object for containing profile
 	 * @return play count for this song and user
+	 * @throws IOException 
+	 * @throws NumberFormatException 
 	 */
-	int parseGetUserProfile(String userId, String songId, UserHolder user) {
-		initScanner();
+	int parseGetUserProfile(String userId, String songId, UserHolder user) throws NumberFormatException, IOException {
+		initReader();
 		int timesPlayed = 0;
 		String lastUserId = null;
+		String line;
 		String[] parts;
 
 		ArrayList<Song> userSongs = new ArrayList<Song>();
 
-		while (scan.hasNextLine()) {
-			parts = scan.nextLine().split("\\s+");
+		while ((line = reader.readLine()) != null) {
+			parts = line.split("\\s+");
 
 			if (userId.equals(lastUserId) && !userId.equals(parts[0]))
 				break;
