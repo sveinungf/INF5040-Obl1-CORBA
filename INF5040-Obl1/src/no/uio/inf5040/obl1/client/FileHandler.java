@@ -1,4 +1,4 @@
-	package no.uio.inf5040.obl1.client;
+package no.uio.inf5040.obl1.client;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
