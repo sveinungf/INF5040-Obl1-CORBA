@@ -3,8 +3,8 @@ package no.uio.inf5040.obl1.server;
 import java.util.*;
 import java.io.*;
 
-import no.uio.inf5040.obl1.server.SongImpl;
-import no.uio.inf5040.obl1.server.UserImpl;
+import no.uio.inf5040.obl1.common.SongImpl;
+import no.uio.inf5040.obl1.common.UserImpl;
 import no.uio.inf5040.obl1.tasteprofile.Song;
 import no.uio.inf5040.obl1.tasteprofile.User;
 import no.uio.inf5040.obl1.tasteprofile.UserHolder;
