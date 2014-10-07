@@ -41,12 +41,12 @@ public class RemoteInvocator implements LineReadListener {
 	}
 
 	@Override
-	public void onLineRead(String[] fields) {
+	public void onLineRead(int lineNumber, String[] fields) {
 		String method = fields[0];
 		String arg1 = fields[1];
 		String arg2 = fields.length > 2 ? fields[2] : null;
 
-		System.out.println("Calling " + method);
+		System.out.println(lineNumber + ": Calling " + method);
 		invoke(method, arg1, arg2);
 	}
 

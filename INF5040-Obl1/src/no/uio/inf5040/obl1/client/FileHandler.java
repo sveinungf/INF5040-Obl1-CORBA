@@ -1,4 +1,4 @@
-package no.uio.inf5040.obl1.client;
+	package no.uio.inf5040.obl1.client;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -34,10 +34,12 @@ public class FileHandler {
 	public void readTo(LineReadListener callback) throws IOException {
 		FileReader in = new FileReader(filepath);
 		BufferedReader reader = new BufferedReader(in);
+		int lineNumber = 0;
 
 		String line;
 		while ((line = reader.readLine()) != null) {
-			callback.onLineRead(line.split("\\s+"));
+			++lineNumber;
+			callback.onLineRead(lineNumber, line.split("\\s+"));
 		}
 
 		reader.close();
