@@ -1,4 +1,4 @@
-package no.uio.inf5040.obl1.server;
+package no.uio.inf5040.obl1.common;
 
 import no.uio.inf5040.obl1.tasteprofile.Song;
 import no.uio.inf5040.obl1.tasteprofile.User;
