@@ -34,6 +34,7 @@ class ServerParser {
 			reader = new BufferedReader(new FileReader(fileName));
 		} catch (Exception e) {
 			System.err.println("Exception: " + e.getMessage());
+			e.printStackTrace(System.out);
 		}
 	}
 
