@@ -19,6 +19,11 @@ class ServerParser {
 	private String fileName;
 	BufferedReader reader;
 	
+	static int USERID_START = 0;
+	static int USERID_END = 40;
+	static int SONGID_START = 41;
+	static int SONGID_END = 59;
+	static int PLAYCOUNT_START = 60;
 
 	ServerParser(String fileName) {
 		this.fileName = fileName;
@@ -64,9 +69,9 @@ class ServerParser {
 
 		while ((line = reader.readLine()) != null){
 
-			userId = line.substring(0, 40);
-			songId = line.substring(41, 59);
-			playCount = Integer.parseInt(line.substring(60));
+			userId = line.substring(USERID_START, USERID_END);
+			songId = line.substring(SONGID_START, SONGID_END);
+			playCount = Integer.parseInt(line.substring(PLAYCOUNT_START));
 			
 			if (lastUserId == null) {
 				lastUserId = userId;
@@ -155,10 +160,10 @@ class ServerParser {
 		
 		while ((line = reader.readLine()) != null) {
 			
-			lineSongId = line.substring(41, 59);
+			lineSongId = line.substring(SONGID_START, SONGID_END);
 
 			if (songId.equals(lineSongId)) {
-				timesPlayed += Integer.parseInt(line.substring(60));
+				timesPlayed += Integer.parseInt(line.substring(PLAYCOUNT_START));
 			}
 		}
 		reader.close();
@@ -182,14 +187,14 @@ class ServerParser {
 
 		while ((line = reader.readLine()) != null) {
 			
-			lineUserId = line.substring(0, 40);
-			lineSongId = line.substring(41, 59);
+			lineUserId = line.substring(USERID_START, USERID_END);
+			lineSongId = line.substring(SONGID_START, SONGID_END);
 					
 			if (userId.equals(lastUserId) && !userId.equals(lineUserId))
 				break;
 
 			if (userId.equals(lineUserId) && songId.equals(lineSongId))
-				timesPlayed += Integer.parseInt(line.substring(60));
+				timesPlayed += Integer.parseInt(line.substring(PLAYCOUNT_START));
 
 			lastUserId = lineUserId;
 		}
@@ -221,14 +226,14 @@ class ServerParser {
 
 		while ((line = reader.readLine()) != null) {
 			
-			lineUserId = line.substring(0, 40);
-			lineSongId = line.substring(41, 59);
+			lineUserId = line.substring(USERID_START, USERID_END);
+			lineSongId = line.substring(SONGID_START, SONGID_END);
 
 			if (userId.equals(lastUserId) && !userId.equals(lineUserId))
 				break;
 
 			if (userId.equals(lineUserId)) {
-				int linePlayCount = Integer.parseInt(line.substring(60));
+				int linePlayCount = Integer.parseInt(line.substring(PLAYCOUNT_START));
 				if (songId.equals(lineSongId))
 					timesPlayed = linePlayCount;
 
