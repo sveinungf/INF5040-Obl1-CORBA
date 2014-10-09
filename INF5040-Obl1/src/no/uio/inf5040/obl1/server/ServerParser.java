@@ -27,7 +27,7 @@ class ServerParser {
 
 	
 	/**
-	 * Initiates buffered
+	 * Initiates bufferedReader
 	 */
 	private void initReader() {
 		try {
@@ -55,7 +55,7 @@ class ServerParser {
 		int userTimesPlayed = 0;
 		int totalPlayCount, playCount;
 		totalPlayCount = playCount = 0;
-		String[] parts = null;
+		String userId, songId;
 		String line = null;
 		String lastUserId = null;
 		ArrayList<Song> userSongs = null;
@@ -64,30 +64,31 @@ class ServerParser {
 
 		while ((line = reader.readLine()) != null){
 
-			parts = line.split("\\s+");
-			// parts[0] = userId, parts[1] = songId, parts[2] = playCount
-
+			userId = line.substring(0, 40);
+			songId = line.substring(41, 59);
+			playCount = Integer.parseInt(line.substring(60));
+			
 			if (lastUserId == null) {
-				lastUserId = parts[0];
+				lastUserId = userId;
 				userSongs = new ArrayList<Song>();
 			}
 
-			playCount = Integer.parseInt(parts[2]);
+			
 
 			/* caching of songs */
-			if (songCache.containsKey(parts[1])) {
+			if (songCache.containsKey(songId)) {
 				// song already exists in cache, update play count
-				totalPlayCount = songCache.get(parts[1]).intValue() + playCount;
-				songCache.put(parts[1], totalPlayCount);
+				totalPlayCount = songCache.get(songId).intValue() + playCount;
+				songCache.put(songId, totalPlayCount);
 			}
 
 			else {
 				// new song - cache
-				songCache.put(parts[1], playCount);
+				songCache.put(songId, playCount);
 			}
 
 			/* caching of users */
-			if (!lastUserId.equals(parts[0])) {
+			if (!lastUserId.equals(userId)) {
 				// new userId - cache or throw away user data
 				addUser(lastUserId, userTimesPlayed, userSongs, userCache, cp);
 				userSongs = new ArrayList<Song>();
@@ -96,11 +97,11 @@ class ServerParser {
 
 			else {
 				// old userId - update users times played and add song to users
-				userSongs.add(new SongImpl(parts[1], playCount));
+				userSongs.add(new SongImpl(songId, playCount));
 				userTimesPlayed += playCount;
 			}
 
-			lastUserId = parts[0];
+			lastUserId = userId;
 		}
 		
 		if(lastUserId != null)
@@ -150,13 +151,14 @@ class ServerParser {
 	int parseGetTimesPlayed(String songId) throws NumberFormatException, IOException {
 		initReader();
 		int timesPlayed = 0;
-		String line;
-		String parts[];
+		String line, lineSongId;
+		
 		while ((line = reader.readLine()) != null) {
-			parts = line.split("\\s+");
+			
+			lineSongId = line.substring(41, 59);
 
-			if (songId.equals(parts[1])) {
-				timesPlayed += Integer.parseInt(parts[2]);
+			if (songId.equals(lineSongId)) {
+				timesPlayed += Integer.parseInt(line.substring(60));
 			}
 		}
 		reader.close();
@@ -176,19 +178,20 @@ class ServerParser {
 		initReader();
 		int timesPlayed = 0;
 		String lastUserId = null;
-		String[] parts;
-		String line;
+		String line, lineUserId, lineSongId;
 
 		while ((line = reader.readLine()) != null) {
-			parts = line.split("\\s+");
-
-			if (userId.equals(lastUserId) && !userId.equals(parts[0]))
+			
+			lineUserId = line.substring(0, 40);
+			lineSongId = line.substring(41, 59);
+					
+			if (userId.equals(lastUserId) && !userId.equals(lineUserId))
 				break;
 
-			if (userId.equals(parts[0]) && songId.equals(parts[1]))
-				timesPlayed += Integer.parseInt(parts[2]);
+			if (userId.equals(lineUserId) && songId.equals(lineSongId))
+				timesPlayed += Integer.parseInt(line.substring(60));
 
-			lastUserId = parts[0];
+			lastUserId = lineUserId;
 		}
 
 		return timesPlayed;
@@ -212,26 +215,28 @@ class ServerParser {
 		initReader();
 		int timesPlayed = 0;
 		String lastUserId = null;
-		String line;
-		String[] parts;
-
+		String line, lineUserId, lineSongId;
+	
 		ArrayList<Song> userSongs = new ArrayList<Song>();
 
 		while ((line = reader.readLine()) != null) {
-			parts = line.split("\\s+");
+			
+			lineUserId = line.substring(0, 40);
+			lineSongId = line.substring(41, 59);
 
-			if (userId.equals(lastUserId) && !userId.equals(parts[0]))
+			if (userId.equals(lastUserId) && !userId.equals(lineUserId))
 				break;
 
-			if (userId.equals(parts[0])) {
-				if (songId.equals(parts[1]))
-					timesPlayed = Integer.parseInt(parts[2]);
+			if (userId.equals(lineUserId)) {
+				int linePlayCount = Integer.parseInt(line.substring(60));
+				if (songId.equals(lineSongId))
+					timesPlayed = linePlayCount;
 
 				userSongs
-						.add(new SongImpl(parts[1], Integer.parseInt(parts[2])));
+						.add(new SongImpl(lineSongId, linePlayCount));
 			}
 
-			lastUserId = parts[0];
+			lastUserId = lineUserId;
 		}
 
 		user.value = new UserImpl(userId, userSongs.toArray(new Song[0]));
